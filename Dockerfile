@@ -1,9 +1,20 @@
+# Use smaller base image
 FROM python:3.10-slim-buster
 
+# Set work directory
 WORKDIR /app
 
-COPY . /app
+# Copy only essential files first
+COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python3", "app.py"]
+# Copy the rest of the application
+COPY . .
+
+# Clean up after install (if necessary)
+RUN rm -rf /root/.cache
+
+# Run the app
+CMD ["python", "app.py"]
